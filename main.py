@@ -1,7 +1,8 @@
 import cruz
+from hBar import HBar
 
-if __name__ == "__main__":
-    file = open("imgNueva.pgm", "rb")
+def open_img(filename):
+    file = open(filename, "rb")
     image = file.readline().decode()
     if image[0] != 'P' or image[1] != '5':
         print("Fichero equivocado")
@@ -25,5 +26,7 @@ if __name__ == "__main__":
             image_original[i].append(c)
             image_aux[i].append(c)
     file.close()
+    return image_original, image_aux, row, col, gray
+   
     structuring = cruz.Cruz(image_original, image_aux, row, col, gray)
     structuring.execute(1)

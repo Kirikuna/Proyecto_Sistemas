@@ -62,7 +62,7 @@ class Cruz:
             self.mutex.release()
 
     def _write_pgm(self, operation) -> None:
-        file = open("imgNueva_"+operation+".pgm", "wb")
+        file = open("imgNueva_cruz_"+operation+".pgm", "wb")
         file.write(bytes("P5\n", 'utf-8'))
         file.write(bytes("# Creado por Nicolas Castillo (2021)\n", 'utf-8'))
         string = str(self.col) + " " + str(self.row) + "\n"
