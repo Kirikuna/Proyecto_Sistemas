@@ -30,7 +30,7 @@ class Cruz:
         file = open("imgNueva_"+operation+".pgm", "wb")
         file.write(bytes("P5\n", 'utf-8'))
         file.write(bytes("# Creado por Nicolas Castillo (2021)\n", 'utf-8'))
-        string = str(self.row) + " " + str(self.col) + "\n"
+        string = str(self.col) + " " + str(self.row) + "\n"
         file.write(bytes(string, 'utf-8'))
         string = str(self.gray) + "\n"
         file.write(bytes(string, 'utf-8'))

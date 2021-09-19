@@ -11,8 +11,8 @@ if __name__ == "__main__":
         exit()
     file.readline()
     dimension = file.readline().decode().split()
-    row = int(dimension[0]) 
-    col = int(dimension[1])
+    col = int(dimension[0]) 
+    row = int(dimension[1])
     gray = int(file.readline().decode())
 
     print(row, " ", col, "\n", gray)
