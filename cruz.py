@@ -1,30 +1,65 @@
+from threading import Lock
+from concurrent.futures import ThreadPoolExecutor
+import logging
 class Cruz:
     def __init__(self, image_original, image_aux, row, col, gray) -> None:
+        logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
         self.original = image_original
         self.aux = image_aux
         self.row = row
         self.col = col
         self.gray = gray
+        self.mutex = Lock()
+        self._max_thread = 8
     
-    def erode(self, min_row, max_row)  -> None:
-        for i in range(1, self.row-1):
-            for j in range(1, self.col-1):
-                min = self.original[i][j-1]
-                l = []
-                l.append(min)
-                l.append(self.original[i-1][j])
-                l.append(self.original[i][j])
-                l.append(self.original[i][j+1])
-                l.append(self.original[i+1][j])
-                for k in l:
-                    if (k[0] < min[0]):
-                        min = k
-                self.aux[i][j] = min
-        print("Retocado con exito")
-        self._write_pgm("erosion")
+    def execute(self, algorithm):
+        name = ''
+        if algorithm == 1:
+            with ThreadPoolExecutor(max_workers=self._max_thread) as executor:
+                for i in range(1, self.row-1):
+                    executor.submit(self._erode, i)
+            name = 'erosion'
+        elif algorithm == 2:
+            with ThreadPoolExecutor(max_workers=self._max_thread) as executor:
+                for i in range(1, self.row-1):
+                    executor.submit(self._dilatation, i)
+            name = 'dilatacion'
+        self._write_pgm(name)
+        
+    
+    def _erode(self, row)  -> None:
+        logging.info(f'Ejecutando erosion {row}')
+        for j in range(1, self.col-1):
+            min = self.original[row][j-1]
+            l = []
+            l.append(min)
+            l.append(self.original[row-1][j])
+            l.append(self.original[row][j])
+            l.append(self.original[row][j+1])
+            l.append(self.original[row+1][j])
+            for k in l:
+                if (k[0] < min[0]):
+                    min = k
+            self.mutex.acquire(1)
+            self.aux[row][j] = min
+            self.mutex.release()
 
-    def dilatation(self, row, col) -> None: 
-        pass
+    def _dilatation(self, row) -> None: 
+        logging.info(f'Ejecutando dilatacion {row}')
+        for j in range(1, self.col-1):
+            max = self.original[row][j-1]
+            l = []
+            l.append(max)
+            l.append(self.original[row-1][j])
+            l.append(self.original[row][j])
+            l.append(self.original[row][j+1])
+            l.append(self.original[row+1][j])
+            for k in l:
+                if (k[0] > max[0]):
+                    max = k
+            self.mutex.acquire(1)
+            self.aux[row][j] = max
+            self.mutex.release()
 
     def _write_pgm(self, operation) -> None:
         file = open("imgNueva_"+operation+".pgm", "wb")
