@@ -1,4 +1,5 @@
-import cruz
+from x import X
+from cruz import Cruz
 from hBar import HBar
 
 def open_img(filename):
@@ -28,5 +29,59 @@ def open_img(filename):
     file.close()
     return image_original, image_aux, row, col, gray
    
-    structuring = cruz.Cruz(image_original, image_aux, row, col, gray)
-    structuring.execute(1)
+if __name__ == '__main__':
+
+    image_original, image_aux, row, col, gray = open_img("imgNueva.pgm")
+
+    op1 = 0
+    while op1 !=1 and op1 != 2:
+        print('PROCESAMIENTO DE IMÁGENES PGM')
+        print('1- Secuencial')
+        print('2- Paralelo')
+        op1 = int(input('Opción: '))
+        print()
+        
+        if op1 !=1 and op1 != 2:
+            print('Opción no válida') 
+
+    if op1 == 2:
+        op1 = 8
+
+    op2 = 0
+    while op2 !=1 and op2 != 2:
+        print('TIPO DE ALGORITMO')
+        print('1- Erosión')
+        print('2- Dilatación')
+        op2 = int(input('Opción: '))
+        print()
+
+        if op2 !=1 and op2 != 2:
+            print('Opción no válida') 
+
+    op3 = 0
+    while op3 !=1 and op3 != 2 and op3 != 3:
+        print('ELEMENTO ESTRUCTURANTE')
+        print('1- Cruz')
+        print('2- Cruz diagonal')
+        print('3- Barra horizontal')
+        op3 = int(input('Opción: '))
+        print()
+
+        if op3 !=1 and op3 != 2 and op3 != 3:
+            print('Opción no válida') 
+
+    if op3 == 1:
+        structuring = Cruz(image_original, image_aux, row, col, gray, op1)
+        structuring.execute(op2)
+
+    elif op3 == 2:
+        structuring = X(image_original, image_aux, row, col, gray, op1)
+        structuring.execute(op2)
+
+    elif op3 == 3:
+        structuring = HBar(image_original, image_aux, row, col, gray, op1)
+        structuring.execute(op2)
+
+
+
+    

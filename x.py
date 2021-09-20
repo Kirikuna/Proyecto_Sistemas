@@ -2,7 +2,7 @@ from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 import logging
 class X:
-    def __init__(self, image_original, image_aux, row, col, gray) -> None:
+    def __init__(self, image_original, image_aux, row, col, gray, max_thread) -> None:
         logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
         self.original = image_original
         self.aux = image_aux
@@ -10,7 +10,7 @@ class X:
         self.col = col
         self.gray = gray
         self.mutex = Lock()
-        self._max_thread = 8
+        self._max_thread = max_thread
     
     def execute(self, algorithm):
         name = ''
