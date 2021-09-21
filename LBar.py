@@ -3,28 +3,27 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 
 class LBar:
-    def __init__(self, image_original, image_aux, row, col, gray, max_thread) -> None:
+    def __init__(self, image_original, image_aux, row, col, gray, max_thread, image_name) -> None:
         logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
         self.original = image_original
         self.aux = image_aux
         self.row = row
         self.col = col
         self.gray = gray
-        self.mutex = Lock()
         self._max_thread = max_thread
+        self.image_name = image_name[:len(image_name)-4]
 
     def execute(self, algorithm):
         name = ''
-        if algorithm == 1:
-            with ThreadPoolExecutor(max_workers=self._max_thread) as executor:
+        with ThreadPoolExecutor(max_workers=self._max_thread) as executor:
+            if algorithm == 1:
                 for i in range(1, self.row):
                     executor.submit(self._erosion, i)
-            name = 'erosion'
-        elif algorithm == 2:
-            with ThreadPoolExecutor(max_workers=self._max_thread) as executor:
+                name = 'erosion'
+            elif algorithm == 2:
                 for i in range(1, self.row):
                     executor.submit(self._dilatation, i)
-            name = 'dilatacion'
+                name = 'dilatacion'
         self._write_pgm(name)
     
     def _erosion(self, i):
@@ -47,7 +46,7 @@ class LBar:
             self.aux[i][j] = max(l)
 
     def _write_pgm(self, operation) -> None:
-        file = open("imgNueva_Lbar_"+operation+".pgm", "wb")
+        file = open(self.image_name+"_Lbar_"+operation+".pgm", "wb")
         file.write(bytes("P5\n", 'utf-8'))
         file.write(bytes("# Creado por Hugo Castro (2021)\n", 'utf-8'))
         string = str(self.col) + " " + str(self.row) + "\n"

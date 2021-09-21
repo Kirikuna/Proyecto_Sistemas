@@ -9,7 +9,7 @@ def open_img(filename):
     if image[0] != 'P' or image[1] != '5':
         print("Fichero equivocado")
         file.close()
-        exit()
+        exit(0)
     file.readline()
     dimension = file.readline().decode().split()
     col = int(dimension[0]) 
@@ -31,8 +31,12 @@ def open_img(filename):
     return image_original, image_aux, row, col, gray
    
 if __name__ == '__main__':
-
-    image_original, image_aux, row, col, gray = open_img("imgNueva.pgm")
+    image_name = input("Nombre/url de imagen: ")
+    try:
+        image_original, image_aux, row, col, gray = open_img(image_name)
+    except FileNotFoundError:
+        print("No existe el archivo")
+        exit()
 
     op1 = 0
     while op1 !=1 and op1 != 2:
@@ -73,19 +77,19 @@ if __name__ == '__main__':
             print('Opción no válida') 
 
     if op3 == 1:
-        structuring = Cruz(image_original, image_aux, row, col, gray, op1)
+        structuring = Cruz(image_original, image_aux, row, col, gray, op1, image_name)
         structuring.execute(op2)
 
     elif op3 == 2:
-        structuring = X(image_original, image_aux, row, col, gray, op1)
+        structuring = X(image_original, image_aux, row, col, gray, op1, image_name)
         structuring.execute(op2)
 
     elif op3 == 3:
-        structuring = HBar(image_original, image_aux, row, col, gray, op1)
+        structuring = HBar(image_original, image_aux, row, col, gray, op1, image_name)
         structuring.execute(op2)
     
     elif op3 == 4:
-        structuring = LBar(image_original, image_aux, row, col, gray, op1)
+        structuring = LBar(image_original, image_aux, row, col, gray, op1, image_name)
         structuring.execute(op2)
 
 
