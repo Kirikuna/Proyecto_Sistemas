@@ -1,4 +1,3 @@
-from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 import logging
 
@@ -12,6 +11,7 @@ class LBar:
         self.gray = gray
         self._max_thread = max_thread
         self.image_name = image_name[:len(image_name)-4]
+        self.file_name = ''
 
     def execute(self, algorithm):
         name = ''
@@ -24,7 +24,7 @@ class LBar:
                 for i in range(1, self.row):
                     executor.submit(self._dilatation, i)
                 name = 'dilatacion'
-        self._write_pgm(name)
+        self.file_name = self.image_name + "_Lbar_" + name + ".pgm"
     
     def _erosion(self, i):
         for j in range(0, self.col - 1):
@@ -44,17 +44,3 @@ class LBar:
             l.append(self.original[i][j+1])
             l.append(self.original[i+1][j])
             self.aux[i][j] = max(l)
-
-    def _write_pgm(self, operation) -> None:
-        file = open(self.image_name+"_Lbar_"+operation+".pgm", "wb")
-        file.write(bytes("P5\n", 'utf-8'))
-        file.write(bytes("# Creado por Hugo Castro (2021)\n", 'utf-8'))
-        string = str(self.col) + " " + str(self.row) + "\n"
-        file.write(bytes(string, 'utf-8'))
-        string = str(self.gray) + "\n"
-        file.write(bytes(string, 'utf-8'))
-        for i in range(0, self.row):
-            for j in self.aux[i]:
-                file.write(j)
-        print("Creado con exito")
-        file.close()

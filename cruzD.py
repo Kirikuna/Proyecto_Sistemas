@@ -1,7 +1,7 @@
-from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 import logging
-class X:
+
+class CruzD:
     def __init__(self, image_original, image_aux, row, col, gray, max_thread, image_name) -> None:
         logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
         self.original = image_original
@@ -11,6 +11,7 @@ class X:
         self.gray = gray
         self._max_thread = max_thread
         self.image_name = image_name[:len(image_name)-4]
+        self.file_name = ''
 
     def execute(self, algorithm):
         name = ''
@@ -23,8 +24,7 @@ class X:
                 for i in range(1, self.row-1):
                     executor.submit(self._dilatation, i)
                 name = 'dilatacion'
-        self._write_pgm(name)
-        
+        self.file_name = self.image_name + "_dCruz_" + name + ".pgm"
     
     def _erode(self, row)  -> None:
         #logging.info(f'Ejecutando erosion {row}')
@@ -47,17 +47,3 @@ class X:
             l.append(self.original[row+1][j-1])
             l.append(self.original[row+1][j+1])
             self.aux[row][j] = max(l)
-
-    def _write_pgm(self, operation) -> None:
-        file = open(self.image_name+"_cruz_diagonal_"+operation+".pgm", "wb")
-        file.write(bytes("P5\n", 'utf-8'))
-        file.write(bytes("# Creado por Nicolas Castillo (2021)\n", 'utf-8'))
-        string = str(self.col) + " " + str(self.row) + "\n"
-        file.write(bytes(string, 'utf-8'))
-        string = str(self.gray) + "\n"
-        file.write(bytes(string, 'utf-8'))
-        for i in range(0, self.row):
-            for j in self.aux[i]:
-                file.write(j)
-        print("Creado con exito")
-        file.close()
