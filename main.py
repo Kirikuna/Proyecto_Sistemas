@@ -2,6 +2,8 @@ from x import X
 from cruz import Cruz
 from hBar import HBar
 from LBar import LBar
+from DownRight import DownRight
+from UpDown import UpDown
 
 def open_img(filename):
     file = open(filename, "rb")
@@ -64,16 +66,18 @@ if __name__ == '__main__':
             print('Opción no válida') 
 
     op3 = 0
-    while op3 !=1 and op3 != 2 and op3 != 3 and op3 != 4:
+    while op3 !=1 and op3 != 2 and op3 != 3 and op3 != 4 and op3 != 5 and op3 != 6:
         print('ELEMENTO ESTRUCTURANTE')
         print('1- Cruz')
         print('2- Cruz diagonal')
         print('3- Barra horizontal')
         print('4- Tipo L')
+        print('5- Barra vertical')
+        print('6- Tipo L horizontal')
         op3 = int(input('Opción: '))
         print()
 
-        if op3 !=1 and op3 != 2 and op3 != 3 and op3 != 4:
+        if op3 !=1 and op3 != 2 and op3 != 3 and op3 != 4 and op3 != 5 and op3 != 6:
             print('Opción no válida') 
 
     if op3 == 1:
@@ -91,6 +95,13 @@ if __name__ == '__main__':
     elif op3 == 4:
         structuring = LBar(image_original, image_aux, row, col, gray, op1, image_name)
         structuring.execute(op2)
+    elif op3 == 5:
+        structuring = UpDown(image_original, image_aux, row, col, gray, op1, image_name)
+        structuring.execute(op2)
+    elif op3 == 6:
+        structuring = DownRight(image_original, image_aux, row, col, gray, op1, image_name)
+        structuring.execute(op2)
+
 
 
 
